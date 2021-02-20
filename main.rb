@@ -30,6 +30,11 @@ class Player
       end
     end
   end
+
+  def draw_card(player)
+    @hand << player.hand[0]
+    player.hand.delete_at(0)
+  end
 end
 
 class GameController
@@ -41,9 +46,45 @@ class GameController
 
     deal_cards(player1: player1, player2: player2)
 
-    puts "#{player1.hand} player1"s
+    puts "----------------- #{player1.name}さんの手札----------------"
+    puts ""
+
+    player1.hand.each.with_index(1) do |card, i|
+      printf("%-6s", "#{card}")
+      puts "" if i % 8 == 0
+    end
+
+    puts <<~TEXT
+
+           
+           -----------------------------------------------
+
+         TEXT
+
     player1.check_matched_cards
-    puts "#{player1.hand} player1"
+    player2.check_matched_cards
+
+    puts <<~TEXT
+           #{player1.name}の手札の状況 #{player1.hand}
+
+           #{player2.name}の手札の状況 #{player2.hand}
+         TEXT
+
+    while player1.hand.any? && player2.hand.any?
+      player1.draw_card(player2)
+      player1.check_matched_cards
+
+      break if player1.hand.empty?
+
+      player2.draw_card(player1)
+      player2.check_matched_cards
+    end
+
+    if player1.hand.empty?
+      puts "#{player1.name}さんの勝利"
+    else
+      puts "#{player2.name}さんの勝利"
+    end
   end
 
   private
@@ -68,8 +109,29 @@ class GameController
   end
 end
 
-player1 = Player.new(name: "太郎")
-player2 = Player.new(name: "花子")
+puts <<~TEXT
+
+       ------------------------------------------
+       |                                        |
+       |               BABANUKI                 |
+       |                                        |
+       ------------------------------------------
+
+       対戦相手は太郎さんです。
+     TEXT
+
+print "あなたのプレイヤー名をご自由に入力ください。 > "
+player_name = gets.chomp
+puts <<~TEXT
+
+       #{player_name}さんですね！よろしくお願いします。
+       それでは、ゲームを始めます。
+       カードを配ります。
+
+     TEXT
+
+player1 = Player.new(name: "#{player_name}")
+player2 = Player.new(name: "太郎")
 
 game_controller = GameController.new
 game_controller.game_start(player1: player1, player2: player2)
