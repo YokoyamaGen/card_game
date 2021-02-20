@@ -46,7 +46,7 @@ class GameController
 
     deal_cards(player1: player1, player2: player2)
 
-    puts "----------------- #{player1.name}さんの手札----------------"
+    puts "-------------- #{player1.name}さんの手札 #{player1.hand.size}枚---------------"
     puts ""
 
     player1.hand.each.with_index(1) do |card, i|
