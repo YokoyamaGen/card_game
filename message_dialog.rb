@@ -4,7 +4,7 @@ module MessageDialog
   def player_hand_info(**params)
     player = params[:player]
 
-    puts "--------------#{player.name}さんの手札 #{player.hand.size}枚-------------"
+    puts "#{player.name}さんの手札".center(50 - player.name.size, "-")
     puts ""
 
     player.hand.each.with_index(1) do |card, i|
@@ -15,7 +15,7 @@ module MessageDialog
     puts <<~TEXT
 
            
-           ----------------------------------------------
+           -------------------------------------------------------
 
 
          TEXT

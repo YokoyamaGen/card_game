@@ -14,8 +14,13 @@ puts <<~TEXT
        対戦相手は太郎さんです。
      TEXT
 
-print "あなたのプレイヤー名をご自由に入力ください。 > "
-player_name = gets.chomp
+print "あなたのプレイヤー名を日本語で入力ください。> "
+while true
+  player_name = gets.chomp
+  break if player_name =~ /^[^a-zA-Z0-9]+$/
+  print  "日本語で入力ください> "
+end
+
 puts <<~TEXT
 
        #{player_name}さんですね！よろしくお願いします。

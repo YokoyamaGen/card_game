@@ -16,8 +16,17 @@ class GameController
     player_hand_info(player: player1)
     player_hand_info(player: player2)
 
+    puts <<~TEXT
+           一致するカードがある場合は手札から捨ててください
+
+           
+         TEXT
+
     player1.check_matched_cards
     player2.check_matched_cards
+
+    player_hand_info(player: player1)
+    player_hand_info(player: player2)
 
     while player1.hand.any? && player2.hand.any?
       player1.draw_card(player2)
