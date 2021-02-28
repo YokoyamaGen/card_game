@@ -1,23 +1,69 @@
 #encoding: utf-8
 
 module MessageDialog
-  def player_hand_info(**params)
-    player = params[:player]
 
-    puts "#{player.name}さんの手札".center(50 - player.name.size, "-")
-    puts ""
+  RIVAL_NAME = "太郎"
+  HEART_FIRST_CARD = "H-1"
+  HEART_LAST_CARD = "H-13"
+  DIAMOND_FIRST_CARD = "D-1"
+  DIAMOND_LAST_CARD = "D-13"
+  SPADE_FIRST_CARD = "S-1"
+  SPADE_LAST_CARD = "S-13"
+  CLUB_FIRST_CARD = "C-1"
+  CLUB_LAST_CARD = "C-13"
+  JOKER_CARD = "Joker"
+  MASKING_CARD = "***"
+  INDENTION_POSITION = 8
+  OUTPUT_FORMAT = "%-6s"
+  CARD_CHARA_FIRST = 2
+  CARD_CHARA_LAST = 3
 
-    player.hand.each.with_index(1) do |card, i|
-      printf("%-6s", "#{card}")
-      puts "" if i % 8 == 0
-    end
-
+  def game_initial_msg
     puts <<~TEXT
 
-           
+        ------------------------------------------
+        |                                        |
+        |               BABANUKI                 |
+        |                                        |
+        ------------------------------------------
+
+        対戦相手は#{RIVAL_NAME}さんです。
+      TEXT
+  end
+
+  def input_player_name_msg
+    print "あなたのプレイヤー名を日本語で入力ください。> "
+    while true
+      player_name = gets.chomp
+      return player_name if player_name != RIVAL_NAME && player_name =~ /^[^a-zA-Z0-9]+$/
+      print  "日本語もしくは、#{RIVAL_NAME}さんと別の名前で入力ください> "
+    end
+  end
+
+  def game_start_msg(**params)
+    player = params[:player]
+    puts <<~TEXT
+
+          #{player.name}さんですね！よろしくお願いします。
+          それでは、ゲームを始めます。
+          カードを配ります。
+
+        TEXT
+  end
+
+  def type_msg
+    puts <<~TEXT
+            キーボードでエンターキーを押してください。
+            一致するカードがある場合は手札から捨てます。
+            
+          TEXT
+  end
+
+  def border_msg
+    puts <<~TEXT
+
            -------------------------------------------------------
 
-
-         TEXT
+    TEXT
   end
 end
