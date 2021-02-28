@@ -69,7 +69,7 @@ class GameController
   def player_hand_info(**params)
     player = params[:player]
 
-    puts "#{player.name}さんの手札".center(50 - player.name.size, "-")
+    puts "#{player.name}さんの手札".center(MAX_BORDER_SIZE - player.name.size, BORDER_CHARCTER)
     puts ""
 
     player.hand.each.with_index(1) do |card, i|

@@ -3,6 +3,9 @@
 module MessageDialog
 
   RIVAL_NAME = "太郎"
+  NOT_PERMITED_PATTERN = /^[^a-zA-Z0-9０-９]+$/
+  MAX_BORDER_SIZE = 50
+  BORDER_CHARCTER = "-"
   HEART_FIRST_CARD = "H-1"
   HEART_LAST_CARD = "H-13"
   DIAMOND_FIRST_CARD = "D-1"
@@ -35,7 +38,7 @@ module MessageDialog
     print "あなたのプレイヤー名を日本語で入力ください。> "
     while true
       player_name = gets.chomp
-      return player_name if player_name != RIVAL_NAME && player_name =~ /^[^a-zA-Z0-9]+$/
+      return player_name if player_name != RIVAL_NAME && player_name =~ NOT_PERMITED_PATTERN
       print  "日本語もしくは、#{RIVAL_NAME}さんと別の名前で入力ください> "
     end
   end
@@ -65,5 +68,13 @@ module MessageDialog
            -------------------------------------------------------
 
     TEXT
+  end
+
+  def input_draw_card_position_msg
+    print "相手の手札の左から何番目のカードを引きますか？半角数字で入力してください> "
+  end
+
+  def not_exist_card_msg
+    print "存在しないカードです。もう一度選び直してください> "
   end
 end

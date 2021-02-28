@@ -3,13 +3,13 @@ require_relative "player.rb"
 
 class MainCharacter < Player
   def draw_card(player)
-    print "相手の手札の左から何番目のカードを引きますか？半角数字で入力してください> "
+    input_draw_card_position_msg
     while true
       draw_position = gets.to_i
       draw_position -= 1
       break if draw_position < player.hand.size
       puts ""
-      print "存在しないカードです。もう一度選び直してください> "
+      not_exist_card_msg
     end
 
     puts <<~TEXT
