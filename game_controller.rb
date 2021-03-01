@@ -22,7 +22,7 @@ class GameController
 
     #ユーザにエンターキーを押すように促すためのメッセージ
     type_msg
-    input = $stdin.gets.chomp
+    $stdin.gets.chomp
 
     #手札のカードの中で一致する番号がないか確認後。一致するカードがあれば、手札から捨てる
     @player1.check_matched_cards
@@ -51,11 +51,11 @@ class GameController
   end
 
   def shuffle_cards
-    @total_cards = (HEART_FIRST_CARD..HEART_LAST_CARD).to_a
-    @total_cards.concat((DIAMOND_FIRST_CARD..DIAMOND_LAST_CARD).to_a)
-    @total_cards.concat((SPADE_FIRST_CARD..SPADE_LAST_CARD).to_a)
-    @total_cards.concat((CLUB_FIRST_CARD..CLUB_LAST_CARD).to_a)
-    @total_cards.push(JOKER_CARD)
+    @total_cards = ("H-1".."H-13").to_a          #ハートの1〜13を配列に格納
+    @total_cards.concat(("D-1".."D-13").to_a)    #ダイヤの1〜13を配列に格納
+    @total_cards.concat(("S-1".."S-13").to_a)    #スペードの1〜13を配列に格納
+    @total_cards.concat(("C-1".."C-13").to_a)    #クラブの1〜13を配列に格納
+    @total_cards.push("Joker")
     @total_cards.shuffle!
   end
 
