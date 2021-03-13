@@ -34,13 +34,11 @@ module MessageDialog
     end
   end
 
-  def game_start_msg(**params)
-    player = params[:player]
+  def game_start_msg(character:)
     puts <<~TEXT
-
-          #{player.name}さんですね！よろしくお願いします。
-          それでは、ゲームを始めます。
-          カードを配ります。
+        #{character.name}さんですね！よろしくお願いします。
+        それでは、ゲームを始めます。
+        カードを配ります。
 
         TEXT
   end

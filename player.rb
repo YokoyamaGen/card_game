@@ -1,35 +1,23 @@
- #encoding: utf-8
+#encoding: utf-8
+require_relative "character.rb"
 
-class Player
-  attr_reader :name
-  attr_accessor :hand
-
-  def initialize(**params)
-    @name = params[:name]
-    @hand = []
-  end
-
-  def check_matched_cards
-    i = 0
-
-    while i < @hand.length - 1
-      j = i + 1
-
-      #手札の中で番号が一致するトランプの要素番号を取得する
-      while j < @hand.size
-        break if @hand[j].slice(CARD_CHARA_FIRST..CARD_CHARA_LAST) == @hand[i].slice(CARD_CHARA_FIRST..CARD_CHARA_LAST)
-        j += 1
-      end
-
-      #手札の中で一致するカードがあった場合は、手札の中から捨てる
-      if j < @hand.size
-        puts "#{name}さんは#{@hand[j]}と#{@hand[i]}の数字が一致したので、手札から捨てた"
-        puts ""
-        @hand.delete(@hand[j])
-        @hand.delete(@hand[i])
-      else
-        i += 1
-      end
+class Player < Character
+  def draw_card(character:)
+    input_draw_card_position_msg
+    while true
+      draw_position = gets.to_i - 1
+      break if draw_position < character.hand.size &&  draw_position >= 0
+      puts ""
+      not_exist_card_msg
     end
+
+    puts <<~TEXT
+
+    「#{character.hand[draw_position].card_info}」のカードを引きました。
+
+    TEXT
+
+    @hand << character.hand[draw_position]
+    character.hand.delete_at(draw_position)
   end
 end

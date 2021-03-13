@@ -1,15 +1,16 @@
 #encoding: utf-8
 
 require_relative "message_dialog.rb"
+require_relative "card.rb"
 
 class GameController
   include MessageDialog
 
-  def game_start(**params)
-    # player1、player2クラスそれぞれのインスタンスをインスタンス変数に代入
-    build_players(params)
+  def initialize(main_character:, sub_character:)
+    @player = main_character
+    @rival = sub_character
 
-    game_start_msg(player: @player1)
+    game_start_msg(character: @player)
 
     shuffle_cards
 
@@ -17,23 +18,37 @@ class GameController
     deal_cards
 
     #配られたカードの情報を出力する
-    player_hand_info(player: @player1)
-    player_hand_info(player: @player2)
+    player_hand_info(character: @player)
+    player_hand_info(character: @rival)
 
     #ユーザにエンターキーを押すように促すためのメッセージ
     type_msg
     $stdin.gets.chomp
 
     #手札のカードの中で一致する番号がないか確認後。一致するカードがあれば、手札から捨てる
-    @player1.check_matched_cards
-    @player2.check_matched_cards
+    @player.check_matched_cards
+    @rival.check_matched_cards
 
     #手札のカードを出力する
-    player_hand_info(player: @player1)
-    player_hand_info(player: @player2)
+    player_hand_info(character: @player)
+    player_hand_info(character: @rival)
+  end
 
+  def game_start
     #player1とplayer2で交互にカードを引く。引いたカードが手札のカードと一致した場合、カードを捨てる
-    each_player_draw_card
+    while @player.hand.any? && @rival.hand.any?
+      @player.draw_card(character: @rival)
+      #手札に一致するカードがないかを確認する。一致するカードがあれば手札から捨てる。
+      @player.check_matched_cards
+
+      break if @player.hand.empty?
+      player_hand_info(character: @player)
+
+      @rival.draw_card(@player)
+      @rival.check_matched_cards
+      break if @rival.hand.empty?
+      player_hand_info(character: @rival)
+    end
 
     border_msg
 
@@ -45,67 +60,43 @@ class GameController
 
   private
 
-  def build_players(**params)
-    @player1 = params[:player1]
-    @player2 = params[:player2]
-  end
-
   def shuffle_cards
-    @total_cards = ("H-1".."H-13").to_a          #ハートの1〜13を配列に格納
-    @total_cards.concat(("D-1".."D-13").to_a)    #ダイヤの1〜13を配列に格納
-    @total_cards.concat(("S-1".."S-13").to_a)    #スペードの1〜13を配列に格納
-    @total_cards.concat(("C-1".."C-13").to_a)    #クラブの1〜13を配列に格納
-    @total_cards.push("Joker")
+    @total_cards = []
+    
+    for suit in ["♡","♢","♤","♧"]
+      (1..13).each{|num|
+        card = Card.new(suit: suit, num: num)
+        @total_cards.push(card)
+      }
+    end
+
+    @total_cards.push(Card.new(suit: "", num: "Joker"))
     @total_cards.shuffle!
   end
 
   def deal_cards
     @total_cards.each.with_index(1) do |card, i|
-      @player1.hand << card if i % 2 == 1
-      @player2.hand << card if i % 2 == 0
+      @player.hand << card if i % 2 == 1
+      @rival.hand << card if i % 2 == 0
     end
   end
 
-  def player_hand_info(**params)
-    player = params[:player]
+  def player_hand_info(character:)
 
-    puts "#{player.name}さんの手札".center(MAX_BORDER_SIZE - player.name.size, BORDER_CHARCTER)
+    puts "#{character.name}さんの手札".center(MAX_BORDER_SIZE - character.name.size, BORDER_CHARCTER)
     puts ""
 
-    player.hand.each.with_index(1) do |card, i|
-      if player.name == RIVAL_NAME 
-        printf(OUTPUT_FORMAT, MASKING_CARD)
-      else
-        printf(OUTPUT_FORMAT, "#{card}")
-      end
-      puts "" if i % INDENTION_POSITION == 0
-    end
+    character.output_hand_info
 
     puts ""
     border_msg
   end
 
   def game_judgment
-    if @player1.hand.empty?
-      puts "#{@player1.name}さんの勝利"
+    if @player.hand.empty?
+      puts "#{@player.name}さんの勝利"
     else
-      puts "#{@player2.name}さんの勝利"
-    end
-  end
-
-  def each_player_draw_card
-    while @player1.hand.any? && @player2.hand.any?
-      @player1.draw_card(@player2)
-      #手札に一致するカードがないかを確認する。一致するカードがあれば手札から捨てる。
-      @player1.check_matched_cards
-
-      break if @player1.hand.empty?
-      player_hand_info(player: @player1)
-
-      @player2.draw_card(@player1)
-      @player2.check_matched_cards
-      break if @player2.hand.empty?
-      player_hand_info(player: @player2)
+      puts "#{@rival.name}さんの勝利"
     end
   end
 end
