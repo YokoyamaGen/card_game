@@ -1,11 +1,15 @@
  #encoding: utf-8
-class Character
-  attr_reader :name
-  attr_accessor :hand
 
-  def initialize(name:)
+ require_relative "message_dialog.rb"
+
+class Character
+  include MessageDialog
+
+  attr_reader :name, :hand
+
+  def initialize(name:, hand:)
     @name = name
-    @hand = []
+    @hand = hand
   end
 
   def output_hand_info
@@ -27,7 +31,6 @@ class Character
 
       #手札の中で番号が一致するトランプの要素番号を取得する
       while j < @hand.size
-        #break if @hand[j].slice(CARD_CHARA_FIRST..CARD_CHARA_LAST) == @hand[i].slice(CARD_CHARA_FIRST..CARD_CHARA_LAST)
         break if @hand[j].num == @hand[i].num
         j += 1
       end

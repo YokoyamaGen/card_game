@@ -1,21 +1,29 @@
 #encoding: utf-8
 
+require_relative "player.rb"
+require_relative "rival.rb"
+require_relative "game_controller.rb"
 require_relative "message_dialog.rb"
 require_relative "card.rb"
 
 class GameController
   include MessageDialog
 
-  def initialize(main_character:, sub_character:)
-    @player = main_character
-    @rival = sub_character
+  def initialize
 
-    game_start_msg(character: @player)
+    game_initial_msg
 
+    player_name = input_player_name_msg
+    
     shuffle_cards
 
-    #各プレイヤーにカードを配る
-    deal_cards
+    player_hand = @total_cards.select.with_index(1){|card, index| index % 2 == 1} 
+    rival_hand = @total_cards.select.with_index(1){|card, index| index % 2 == 0} 
+
+    @player = Player.new(name: "#{player_name}", hand: player_hand)
+    @rival = Rival.new(name: RIVAL_NAME, hand: rival_hand) 
+
+    game_start_msg(character: @player)
 
     #配られたカードの情報を出力する
     player_hand_info(character: @player)
@@ -35,7 +43,7 @@ class GameController
   end
 
   def game_start
-    #player1とplayer2で交互にカードを引く。引いたカードが手札のカードと一致した場合、カードを捨てる
+    #playerとrivalで交互にカードを引く。引いたカードが手札のカードと一致した場合、カードを捨てる
     while @player.hand.any? && @rival.hand.any?
       @player.draw_card(character: @rival)
       #手札に一致するカードがないかを確認する。一致するカードがあれば手札から捨てる。
@@ -72,13 +80,6 @@ class GameController
 
     @total_cards.push(Card.new(suit: "", num: "Joker"))
     @total_cards.shuffle!
-  end
-
-  def deal_cards
-    @total_cards.each.with_index(1) do |card, i|
-      @player.hand << card if i % 2 == 1
-      @rival.hand << card if i % 2 == 0
-    end
   end
 
   def player_hand_info(character:)
