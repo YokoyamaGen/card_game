@@ -10,7 +10,6 @@ class GameController
   include MessageDialog
 
   def initialize
-
     game_initial_msg
 
     player_name = input_player_name_msg

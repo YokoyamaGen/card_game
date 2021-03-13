@@ -18,6 +18,10 @@ class Player < Character
     TEXT
 
     @hand << character.hand[draw_position]
-    character.hand.delete_at(draw_position)
+    character.delete_rival_hand(draw_position)
+  end
+
+  def delete_player_hand(draw_position)
+    @hand.delete_at(draw_position)
   end
 end

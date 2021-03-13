@@ -37,13 +37,17 @@ class Character
 
       #手札の中で一致するカードがあった場合は、手札の中から捨てる
       if j < @hand.size
+        delete_hand1 = @hand[j]
+        delete_hand2 = @hand[i]
+
+        @hand.delete(delete_hand1)
+        @hand.delete(delete_hand2)
+
         puts <<~TEXT
         #{name}さんは以下の2枚の数字が一致したので、手札から捨てた
-        #{@hand[j].card_info}と#{@hand[i].card_info}
+        #{delete_hand1.card_info}と#{delete_hand2.card_info}
 
         TEXT
-        @hand.delete(@hand[j])
-        @hand.delete(@hand[i])
       else
         i += 1
       end
