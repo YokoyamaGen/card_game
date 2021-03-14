@@ -5,6 +5,10 @@
 class Character
   include MessageDialog
 
+  MASKING_CARD = "***"
+  INDENTION_POSITION = 8
+  OUTPUT_FORMAT = "%-6s"
+
   attr_reader :name, :hand
 
   def initialize(name:, hand:)

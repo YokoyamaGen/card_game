@@ -4,13 +4,6 @@ module MessageDialog
 
   RIVAL_NAME = "太郎"
   NOT_PERMITED_PATTERN = /^[^a-zA-Z0-9０-９]+$/
-  MAX_BORDER_SIZE = 50
-  BORDER_CHARCTER = "-"
-  MASKING_CARD = "***"
-  INDENTION_POSITION = 8
-  OUTPUT_FORMAT = "%-6s"
-  CARD_CHARA_FIRST = 2
-  CARD_CHARA_LAST = 3
 
   def game_initial_msg
     puts <<~TEXT

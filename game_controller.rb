@@ -9,6 +9,9 @@ require_relative "card.rb"
 class GameController
   include MessageDialog
 
+  MAX_BORDER_SIZE = 50
+  BORDER_CHARCTER = "-"
+
   def initialize
     game_initial_msg
 
