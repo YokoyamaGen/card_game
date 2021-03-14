@@ -3,7 +3,6 @@
 module MessageDialog
 
   RIVAL_NAME = "太郎"
-  NOT_PERMITED_PATTERN = /^[^a-zA-Z0-9０-９]+$/
 
   def game_initial_msg
     puts <<~TEXT
@@ -15,20 +14,12 @@ module MessageDialog
         ------------------------------------------
 
         対戦相手は#{RIVAL_NAME}さんです。
-      TEXT
+        TEXT
   end
 
-  def input_player_name_msg
-    print "あなたのプレイヤー名を日本語で入力ください。> "
-    while true
-      player_name = gets.chomp
-      return player_name if player_name != RIVAL_NAME && player_name =~ NOT_PERMITED_PATTERN
-      print  "日本語もしくは、#{RIVAL_NAME}さんと別の名前で入力ください> "
-    end
-  end
-
-  def game_start_msg(character:)
+  def game_start_msg(character)
     puts <<~TEXT
+
         #{character.name}さんですね！よろしくお願いします。
         それでは、ゲームを始めます。
         カードを配ります。
@@ -41,7 +32,7 @@ module MessageDialog
             キーボードでエンターキーを押してください。
             一致するカードがある場合は手札から捨てます。
             
-          TEXT
+        TEXT
   end
 
   def border_msg

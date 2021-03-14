@@ -2,7 +2,7 @@
 require_relative "character.rb"
 
 class Player < Character
-  def draw_card(character:)
+  def draw_card(character)
     input_draw_card_position_msg
     while true
       draw_position = gets.to_i - 1

@@ -16,7 +16,7 @@ class Character
     @hand = hand
   end
 
-  def output_hand_info
+  def display_hand_info
     @hand.each.with_index(1) do |card, i|
       if self.class == Rival 
         printf(OUTPUT_FORMAT, MASKING_CARD)
