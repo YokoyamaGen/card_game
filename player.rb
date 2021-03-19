@@ -11,11 +11,7 @@ class Player < Character
       not_exist_card_msg
     end
 
-    puts <<~TEXT
-
-    「#{rival.hand[draw_position].card_info}」のカードを引きました。
-
-    TEXT
+    draw_card_msg(rival, draw_position)
 
     check_drawed_card(rival, draw_position)
 

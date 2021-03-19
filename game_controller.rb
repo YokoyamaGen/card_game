@@ -32,7 +32,9 @@ class GameController
   def initialize(player, rival)
     @player = player
     @rival = rival
+  end
 
+  def game_start
     game_start_msg(@player)
 
     total_cards = shuffle_cards
@@ -58,9 +60,7 @@ class GameController
     #手札のカードを出力する
     player_hand_info(@player)
     player_hand_info(@rival)
-  end
 
-  def game_start
     #playerとrivalで交互にカードを引く。引いたカードが手札のカードと一致した場合、カードを捨てる
     while @player.hand.any? && @rival.hand.any?
       @player.draw_card(@rival)

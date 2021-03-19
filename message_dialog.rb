@@ -49,6 +49,13 @@ module MessageDialog
     print "存在しないカードです。もう一度選び直してください> "
   end
 
+  def draw_card_msg(rival, draw_position)
+    puts <<~TEXT
+
+    「#{rival.hand[draw_position].card_info}」のカードを引きました。
+
+    TEXT
+  end
 
   def init_discard_hand_msg(delete_hand1, delete_hand2)
     puts <<~TEXT
