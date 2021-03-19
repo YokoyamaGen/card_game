@@ -1,5 +1,5 @@
 class Card
-  attr_reader :suit, :num
+  attr_reader :num
   
   def initialize(mark:, num:)
     @mark = mark

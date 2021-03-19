@@ -2,9 +2,7 @@
 
 module MessageDialog
 
-  RIVAL_NAME = "太郎"
-
-  def game_initial_msg
+  def game_initial
     puts <<~TEXT
 
         ------------------------------------------
@@ -17,10 +15,10 @@ module MessageDialog
         TEXT
   end
 
-  def game_start_msg(character)
+  def game_start_msg(player)
     puts <<~TEXT
 
-        #{character.name}さんですね！よろしくお願いします。
+        #{player.name}さんですね！よろしくお願いします。
         それでは、ゲームを始めます。
         カードを配ります。
 
@@ -49,5 +47,29 @@ module MessageDialog
 
   def not_exist_card_msg
     print "存在しないカードです。もう一度選び直してください> "
+  end
+
+
+  def init_discard_hand_msg(delete_hand1, delete_hand2)
+    puts <<~TEXT
+      #{name}さんは以下の2枚の数字が一致したので、手札から捨てた
+      #{delete_hand1.card_info}と#{delete_hand2.card_info}
+
+    TEXT
+  end
+
+  def add_hand_msg(character, draw_position)
+     puts <<~TEXT
+       #{name}さんは手札に一致するカードがなかったので、#{character.hand[draw_position].card_info}を手札に加えた
+       
+     TEXT
+  end
+
+  def discard_hand_msg(matched_card, character, draw_position)
+     puts <<~TEXT
+       #{name}さんは以下の2枚の数字が一致したので、手札から捨てた
+       #{matched_card.card_info}と#{character.hand[draw_position].card_info}
+
+     TEXT
   end
 end

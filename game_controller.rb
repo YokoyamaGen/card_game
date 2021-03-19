@@ -8,25 +8,40 @@ require_relative "card.rb"
 
 class GameController
   include MessageDialog
+  extend MessageDialog
 
   NOT_PERMITED_PATTERN = /^[^a-zA-Z0-9０-９]+$/
   MAX_BORDER_SIZE = 50
   BORDER_CHARCTER = "-"
 
-  def initialize
-    game_initial_msg
+  class << self
+    def game_initial_msg
+      game_initial
+    end
 
-    player_name = input_player_name_msg
-    
-    shuffle_cards
+    def input_player_name_msg
+      print "あなたのプレイヤー名を日本語で入力ください。> "
+      while true
+        player_name = gets.chomp
+        return player_name if player_name != RIVAL_NAME && player_name =~ NOT_PERMITED_PATTERN
+        print  "日本語もしくは、#{RIVAL_NAME}さんと別の名前で入力ください> "
+      end
+    end
+  end
 
-    player_hand = @total_cards.select.with_index(1){|card, index| index % 2 == 1} 
-    rival_hand = @total_cards.select.with_index(1){|card, index| index % 2 == 0} 
-
-    @player = Player.new(name: "#{player_name}", hand: player_hand)
-    @rival = Rival.new(name: RIVAL_NAME, hand: rival_hand) 
+  def initialize(player, rival)
+    @player = player
+    @rival = rival
 
     game_start_msg(@player)
+
+    total_cards = shuffle_cards
+
+    player_hand = total_cards.select.with_index(1){|card, index| index % 2 == 1} 
+    rival_hand = total_cards.select.with_index(1){|card, index| index % 2 == 0} 
+    
+    @player.receive_cards(player_hand)
+    @rival.receive_cards(rival_hand)
 
     #配られたカードの情報を出力する
     player_hand_info(@player)
@@ -49,49 +64,43 @@ class GameController
     #playerとrivalで交互にカードを引く。引いたカードが手札のカードと一致した場合、カードを捨てる
     while @player.hand.any? && @rival.hand.any?
       @player.draw_card(@rival)
-      #手札に一致するカードがないかを確認する。一致するカードがあれば手札から捨てる。
-      @player.check_matched_cards
 
       break if @player.hand.empty?
       player_hand_info(@player)
 
       @rival.draw_card(@player)
-      @rival.check_matched_cards
       break if @rival.hand.empty?
       player_hand_info(@rival)
     end
+  end
 
+  #ゲームの勝利者を判定する
+  def game_judgment   
     border_msg
 
-    #ゲームの勝利者を判定する
-    game_judgment
+    if @player.hand.empty?
+      puts "#{@player.name}さんの勝利"
+    else
+      puts "#{@rival.name}さんの勝利"
+    end
 
     border_msg
   end
 
   private
 
-  def input_player_name_msg
-    print "あなたのプレイヤー名を日本語で入力ください。> "
-    while true
-      player_name = gets.chomp
-      return player_name if player_name != RIVAL_NAME && player_name =~ NOT_PERMITED_PATTERN
-      print  "日本語もしくは、#{RIVAL_NAME}さんと別の名前で入力ください> "
-    end
-  end
-
   def shuffle_cards
-    @total_cards = []
+    total_cards = []
     
     for card_mark in ["♡","♢","♤","♧"]
       (1..13).each do |card_num|
         card = Card.new(mark: card_mark, num: card_num)
-        @total_cards.push(card)
+        total_cards.push(card)
       end
     end
 
-    @total_cards.push(Card.new(mark: "", num: "Joker"))
-    @total_cards.shuffle!
+    total_cards.push(Card.new(mark: "", num: "Joker"))
+    total_cards.shuffle!
   end
 
   def player_hand_info(character)
@@ -102,13 +111,5 @@ class GameController
 
     puts ""
     border_msg
-  end
-
-  def game_judgment
-    if @player.hand.empty?
-      puts "#{@player.name}さんの勝利"
-    else
-      puts "#{@rival.name}さんの勝利"
-    end
   end
 end
