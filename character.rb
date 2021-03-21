@@ -48,7 +48,7 @@ class Character
 
   def check_drawed_card(character, draw_position)
     #相手の手札から引いたカードが自身の手札と一致するか確認する
-    matched_card = @hand.find { |n| n.num == character.hand[draw_position].num }
+    matched_card = @hand.find { |card| card.num == character.hand[draw_position].num }
 
     if matched_card.nil?
       #引いたカードと手札のカードがマッチしなかったら、引いたカードを手札に加える。
